@@ -1,0 +1,2 @@
+package com.foodhub.security;public class SecurityConfig {
+}
