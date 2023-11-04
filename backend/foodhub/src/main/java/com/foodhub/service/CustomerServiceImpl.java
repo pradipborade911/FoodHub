@@ -3,15 +3,14 @@ package com.foodhub.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.foodhub.dto.SignUpRequest;
+import com.foodhub.dto.UserProfile;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.foodhub.dto.AddressDto;
-import com.foodhub.dto.CustomerDto;
 import com.foodhub.entities.Address;
 import com.foodhub.entities.Customer;
 import com.foodhub.enums.AddressType;
@@ -32,32 +31,16 @@ public class CustomerServiceImpl implements CustomerService {
 	private AddressRepository addressRepo;
 
 	@Override
-	public CustomerDto createCustomer(CustomerDto customerDto) {
-		Customer customer = modelMapper.map(customerDto, Customer.class);
-		Address address = modelMapper.map(customerDto.getAddress(), Address.class);
-		address.setAddressType(AddressType.HOME);
-		customer.setRegisterDate(LocalDate.now());
-		
-		customer = customerRepo.save(customer);
-		address.setCustomer(customer);
-		address = addressRepo.save(address);
-		AddressDto addressDto = modelMapper.map(address, AddressDto.class);
-		CustomerDto returnCustomerDto = modelMapper.map(customer, CustomerDto.class);
-		returnCustomerDto.setAddress(addressDto);
-		return returnCustomerDto;
-	}
+	public List<UserProfile> getAllCustomers() {
 
-	@Override
-	public List<CustomerDto> getAllCustomers() {
-
-		List<CustomerDto> allCustomersList = new ArrayList<CustomerDto>();
+		List<UserProfile> allCustomersList = new ArrayList<UserProfile>();
 
 		addressRepo.findAllByAddressTypeAndVendor(AddressType.HOME, null)
 				.orElseThrow(() -> new ResourceNotFoundException("Error occured while fecthing addresses!"))
 				.forEach(address -> { // Get Vendor corresponding to an address
 										// Create addresss Dto and put it in the list
-					CustomerDto customerDto = modelMapper.map(address.getCustomer(), CustomerDto.class);
-					customerDto.setAddress(modelMapper.map(address, AddressDto.class));
+					UserProfile customerDto = modelMapper.map(address.getCustomer(), UserProfile.class);
+					customerDto.setAddress(address.toString());
 					allCustomersList.add(customerDto);
 				});
 		if (allCustomersList.isEmpty())
@@ -65,57 +48,39 @@ public class CustomerServiceImpl implements CustomerService {
 		return allCustomersList;
 	}
 
-//	@Override
-//	public List<CustomerDto> getAllCustomers() {
-//		//fetching all HOME addresses to find home address of each customer
-//		List<Address> homeAddressList = addressRepo.findAllByAddressType(AddressType.HOME)
-//				.orElseThrow(()->new ResourceNotFoundException("Error occured while fecthing addresses!"));
-//		List<CustomerDto> allCustomersList = customerRepo.findAll()
-//				.stream()
-//				.map(customer->{
-//					CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
-//					Address homeAddress = homeAddressList.stream()
-//							.filter(address->address.getCustomer()==customer)
-//							.collect(Collectors.toList()).get(0);
-//					customerDto.setAddress(modelMapper.map(homeAddress, AddressDto.class));
-//					return customerDto;
-//				})
-//				.collect(Collectors.toList());
-//		return allCustomersList;
-//	}
-
 	@Override
-	public CustomerDto getCustomerById(Long customerId) {
+	public UserProfile getCustomerById(Long customerId) {
 		// Find Customer
 		Customer customer = customerRepo.findById(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid Customer Id!")) ;
 		// Find Home type address for the customer 
 		Address address = addressRepo.findByAddressTypeAndCustomer(AddressType.HOME,customer) ;
-		
-		CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class) ;
-		customerDto.setAddress(modelMapper.map(address, AddressDto.class));
+
+		UserProfile customerDto = modelMapper.map(customer, UserProfile.class) ;
+		customerDto.setAddress(address.toString());
 		return customerDto ;
 	}
 
 	@Override
-	public CustomerDto getCustomerByEmail(String email) {
+	public UserProfile getCustomerByEmail(String email) {
 		// Find Customer
 		Customer customer = customerRepo.findByEmail(email)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid Customer Id!")) ;
 		// Find Home type address for the customer 
 		Address address = addressRepo.findByAddressTypeAndCustomer(AddressType.HOME,customer) ;
-		
-		CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class) ;
-		customerDto.setAddress(modelMapper.map(address, AddressDto.class));
+
+		UserProfile customerDto = modelMapper.map(customer, UserProfile.class) ;
+		customerDto.setAddress(address.toString());
 		return customerDto ;
 	}
 	
 	@Override
-	public CustomerDto updateCustomerDetails(CustomerDto detachedCustomer) {
-		customerRepo.findById(detachedCustomer.getId())
+	public UserProfile updateCustomerDetails(Long id, SignUpRequest detachedCustomer) {
+		customerRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid customer ID"));
-		customerRepo.save(modelMapper.map(detachedCustomer, Customer.class));
-		return detachedCustomer;
+		Customer customer = customerRepo.save(modelMapper.map(detachedCustomer, Customer.class));
+		UserProfile customerProfile = modelMapper.map(customer, UserProfile.class);
+		return customerProfile;
 	}
 
 	@Override

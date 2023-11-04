@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignInResponse {
+public class UserProfile {
     private Long id  ;
     private String firstName;
     private String lastName;
@@ -17,6 +17,4 @@ public class SignInResponse {
     private String mobile;
     private UserRole userRole;
     private String address;
-    private String jwt ;
-
 }

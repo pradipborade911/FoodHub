@@ -1,12 +1,10 @@
 package com.foodhub.service;
 
+import com.foodhub.dto.UserProfile;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.foodhub.dto.AddressDto;
-import com.foodhub.dto.CustomerDto;
-import com.foodhub.dto.VendorDto;
 import com.foodhub.entities.Address;
 import com.foodhub.entities.Customer;
 import com.foodhub.entities.Vendor;
@@ -20,7 +18,6 @@ import com.foodhub.repository.VendorRepository;
 @Transactional
 @Service
 public class AddressServiceImpl implements AddressService {
-
 	@Autowired
 	ModelMapper modelMapper ;
 
@@ -34,11 +31,9 @@ public class AddressServiceImpl implements AddressService {
 	VendorRepository vendorRepo  ;
 
 	@Override
-	public Object addAddress(AddressDto addressDto) {
-			Address address = modelMapper.map(addressDto, Address.class) ;
-			if(addressDto.getRole() == UserRole.CUSTOMER) {
-				Customer customer = customerRepo.findById(addressDto.getId())
-								.orElseThrow(() -> new ResourceNotFoundException("Invalid User Id")) ;
+	public UserProfile addCustomerAddress(Long id, Address address) {
+		Customer customer = customerRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid User Id")) ;
 
 				if(addressRepo.findByAddressTypeAndCustomer(AddressType.HOME, customer) == null)
 					address.setAddressType(AddressType.HOME);
@@ -47,11 +42,14 @@ public class AddressServiceImpl implements AddressService {
 
 				address.setCustomer(customer);
 				addressRepo.save(address) ;
-				CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class) ;
-				customerDto.setAddress(addressDto);
-				return customerDto ;
-			}else {
-				Vendor vendor = vendorRepo.findById(addressDto.getId())
+				UserProfile customerUser = modelMapper.map(customer, UserProfile.class) ;
+				customerUser.setAddress(address.toString());
+				return customerUser ;
+			}
+
+	@Override
+	public UserProfile addVendorAddress(Long id, Address address) {
+				Vendor vendor = vendorRepo.findById(id)
 								.orElseThrow(() -> new ResourceNotFoundException("Invalid User Id")) ;
 				if(addressRepo.findByAddressTypeAndVendor(AddressType.HOME, vendor) == null)
 					address.setAddressType(AddressType.HOME);
@@ -60,10 +58,10 @@ public class AddressServiceImpl implements AddressService {
 
 				address.setVendor(vendor);
 				addressRepo.save(address) ;
-				VendorDto vendorDto = modelMapper.map(vendor, VendorDto.class) ;
-				vendorDto.setAddress(addressDto);
-				return vendorDto ;
+				UserProfile vendorUser = modelMapper.map(vendor, UserProfile.class) ;
+				vendorUser.setAddress(address.toString());
+				return vendorUser ;
 			}
 	}
 
-}
+

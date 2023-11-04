@@ -12,9 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Date;
 
 public class JwtUtils {
-    @Value("${token.signing.key}")
-    private static String jwtSigningKey;
-    private static String extractUserName(String token){
+    //@Value("${token.signing.key}")
+    private static String jwtSigningKey = "SBVSv7+ul1J2SbTaeKHHELUQvQOxP/aq5XbOpwtQJCWKRqPF9Yr0L1QLHAfmQ0N0SBVSv7+ul1J2SbTaeKHHELUQvQOxP/aq5XbOpwtQJCWKRqPF9Yr0L1QLHAfmQ0N0";
+    public static String extractUserName(String token){
         Claims claims =extractAllClaims(token);
         return claims.getSubject();
     }

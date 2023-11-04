@@ -12,7 +12,7 @@ import lombok.*;
 public class SignInRequest {
     @NotBlank(message = "email must be supplied")
     @Email(message = "Invalid email format")
-    private String email;
+    private String username;
 
     @NotBlank(message = "password must be supplied")
     private String password;

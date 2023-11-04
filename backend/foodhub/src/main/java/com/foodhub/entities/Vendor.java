@@ -2,8 +2,8 @@ package com.foodhub.entities;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.foodhub.security.User;
+import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +32,8 @@ public class Vendor extends BaseEntity {
 	String email;
 	String mobile;
 	LocalDate registerDate;
-
+	@OneToOne(cascade = CascadeType.ALL)@JoinColumn(name="user_id")
+	private User user;
 
 //	@OneToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name="address_id")

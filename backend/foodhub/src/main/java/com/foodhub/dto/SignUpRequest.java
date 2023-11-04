@@ -1,5 +1,6 @@
 package com.foodhub.dto;
 
+import com.foodhub.entities.Address;
 import com.foodhub.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignUpRequest {
+    @NotBlank(message = "username must be supplied")
+    private String username;
+
     @NotBlank(message = "first name must be supplied")
     private String firstName;
 
@@ -27,4 +31,6 @@ public class SignUpRequest {
     private String password;
 
     private String userRole;
+
+    private Address address;
 }

@@ -35,5 +35,5 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 	Optional<Address> findByVendorIdAndAddressType(Long id, AddressType addressType);
 
 	Address findByAddressTypeAndCustomer(AddressType home, Customer customer);
-	
+
 }

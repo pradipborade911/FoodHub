@@ -1,40 +1,38 @@
 package com.foodhub.service;
 
 import java.util.List;
-import com.foodhub.dto.CustomerDto;
-import com.foodhub.dto.VendorDto;
+
+import com.foodhub.dto.UserProfile;
 import jakarta.transaction.Transactional;
 
 @Transactional
 public interface VendorService {
 
-	public VendorDto createVendor(VendorDto vendor);
+	public List<UserProfile> getAllVendorsList();
 
-	public List<VendorDto> getAllVendorsList();
+	public UserProfile getVendorById(Long vendorId);
 
-	public VendorDto getVendorById(Long vendorId);
-
-	public VendorDto updateVendor(VendorDto detachedVendor);
+	public UserProfile updateVendor(UserProfile detachedVendor);
 
 	public String deleteVendorById(Long vendorId);
 
 	public String approveVendorById(Long vendorId);
 
-	public List<VendorDto> getAllUnapprovedVendors();
+	public List<UserProfile> getAllUnapprovedVendors();
 
 	/*
-	 * public VendorDto getUnapprovedVendorById(Long vendorId);
+	 * public UserProfile getUnapprovedVendorById(Long vendorId);
 	 */	
-	public String changeAvailability(VendorDto vendor);
+	public String changeAvailability(Long id);
 
-	public String changeBlockingStatus(VendorDto vendor);
+	public String changeBlockingStatus(Long id);
 
-	public List<CustomerDto> getCustomersByVendorId(Long vendorId);
+	public List<UserProfile> getCustomersByVendorId(Long vendorId);
 
-	public List<VendorDto> getAllApprovedVendors();
+	public List<UserProfile> getAllApprovedVendors();
 	
-	public List<VendorDto> findAllVendorsByPincode(Integer pincode);
+	public List<UserProfile> findAllVendorsByPincode(Integer pin);
 
-	VendorDto getVendorByEmail(String email);
+	UserProfile getVendorByEmail(String email);
 
 }

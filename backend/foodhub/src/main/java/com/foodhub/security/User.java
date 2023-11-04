@@ -15,14 +15,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="user")
+@Table(name="login")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity implements UserDetails {
     @Column(length=34, unique = true)
-    private String email ;
+    private String username ;
 
     @Column(length = 350)
     private String password ;
@@ -42,7 +42,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

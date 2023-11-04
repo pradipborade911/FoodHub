@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+//@EqualsAndHashCode
 @Entity
 public class Address extends BaseEntity {
 	
@@ -37,4 +37,8 @@ public class Address extends BaseEntity {
 	@JoinColumn(name="vendor_id")
 	private Vendor vendor ;
 
+	@Override
+	public String toString() {
+		return addressType + ": " + line1 + ", " + line2 + ", " + city + " " + pincode + ", " + state;
+	}
 }
