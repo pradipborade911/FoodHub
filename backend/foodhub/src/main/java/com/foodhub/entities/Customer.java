@@ -19,15 +19,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Customer extends BaseEntity {
 	
-	String firstName;
-	String lastName;
-	String email;
-	String mobile;
-	LocalDate registerDate;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String mobile;
+	private LocalDate registerDate;
 	@OneToOne(cascade = CascadeType.ALL)@JoinColumn(name="user_id")
 	private User user;
 	@Value("false")
 	boolean isBlocked;
+	String profilePicPath;
 //	@OneToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name="address_id")
 //	Address address;	

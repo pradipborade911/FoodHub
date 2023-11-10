@@ -10,9 +10,11 @@ import com.foodhub.entities.Vendor;
 
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
-	Optional<List<Vendor>> findByIsVerified(boolean b);
+	Optional<List<Vendor>> findAllByIsVerifiedTrue();
 
 	Optional<Vendor> findByEmail(String email);
 
     Optional<Vendor> findByUser(User user);
+
+	Optional<List<Vendor>> findAllByIsVerifiedFalse();
 }

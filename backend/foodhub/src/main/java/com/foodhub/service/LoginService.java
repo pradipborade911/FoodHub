@@ -2,7 +2,6 @@ package com.foodhub.service;
 
 import com.foodhub.dto.SignInRequest;
 import com.foodhub.dto.SignInResponse;
-import com.foodhub.dto.UserProfile;
 import com.foodhub.dto.SignUpRequest;
 
 public interface LoginService {

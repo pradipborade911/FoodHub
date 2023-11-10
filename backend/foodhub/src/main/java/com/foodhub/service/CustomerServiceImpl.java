@@ -1,11 +1,11 @@
 package com.foodhub.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.foodhub.dto.SignUpRequest;
-import com.foodhub.dto.UserProfile;
+import com.foodhub.dto.CustomerDTO;
+import com.foodhub.repository.ImageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,17 +30,21 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private AddressRepository addressRepo;
 
-	@Override
-	public List<UserProfile> getAllCustomers() {
+	@Autowired
+	ImageService imageService;
 
-		List<UserProfile> allCustomersList = new ArrayList<UserProfile>();
+	@Override
+	public List<CustomerDTO> getAllCustomers() {
+
+		List<CustomerDTO> allCustomersList = new ArrayList<CustomerDTO>();
 
 		addressRepo.findAllByAddressTypeAndVendor(AddressType.HOME, null)
 				.orElseThrow(() -> new ResourceNotFoundException("Error occured while fecthing addresses!"))
 				.forEach(address -> { // Get Vendor corresponding to an address
 										// Create addresss Dto and put it in the list
-					UserProfile customerDto = modelMapper.map(address.getCustomer(), UserProfile.class);
+					CustomerDTO customerDto = modelMapper.map(address.getCustomer(), CustomerDTO.class);
 					customerDto.setAddress(address.toString());
+					customerDto.setProfilePic(imageService.getImageFile(address.getCustomer().getProfilePicPath()));
 					allCustomersList.add(customerDto);
 				});
 		if (allCustomersList.isEmpty())
@@ -49,38 +53,41 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public UserProfile getCustomerById(Long customerId) {
+	public CustomerDTO getCustomerById(Long customerId) {
 		// Find Customer
 		Customer customer = customerRepo.findById(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid Customer Id!")) ;
 		// Find Home type address for the customer 
 		Address address = addressRepo.findByAddressTypeAndCustomer(AddressType.HOME,customer) ;
 
-		UserProfile customerDto = modelMapper.map(customer, UserProfile.class) ;
+		CustomerDTO customerDto = modelMapper.map(customer, CustomerDTO.class) ;
+		customerDto.setProfilePic(imageService.getImageFile(customer.getProfilePicPath()));
 		customerDto.setAddress(address.toString());
 		return customerDto ;
 	}
 
 	@Override
-	public UserProfile getCustomerByEmail(String email) {
+	public CustomerDTO getCustomerByEmail(String email) {
 		// Find Customer
 		Customer customer = customerRepo.findByEmail(email)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid Customer Id!")) ;
 		// Find Home type address for the customer 
 		Address address = addressRepo.findByAddressTypeAndCustomer(AddressType.HOME,customer) ;
 
-		UserProfile customerDto = modelMapper.map(customer, UserProfile.class) ;
+		CustomerDTO customerDto = modelMapper.map(customer, CustomerDTO.class) ;
+		customerDto.setProfilePic(imageService.getImageFile(customer.getProfilePicPath()));
 		customerDto.setAddress(address.toString());
 		return customerDto ;
 	}
 	
 	@Override
-	public UserProfile updateCustomerDetails(Long id, SignUpRequest detachedCustomer) {
-		customerRepo.findById(id)
+	public CustomerDTO updateCustomerDetails(CustomerDTO detachedCustomer) {
+		customerRepo.findById(detachedCustomer.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid customer ID"));
 		Customer customer = customerRepo.save(modelMapper.map(detachedCustomer, Customer.class));
-		UserProfile customerProfile = modelMapper.map(customer, UserProfile.class);
-		return customerProfile;
+		CustomerDTO customerDto = modelMapper.map(customer, CustomerDTO.class);
+		customerDto.setProfilePic(imageService.getImageFile(customer.getProfilePicPath()));
+		return customerDto;
 	}
 
 	@Override

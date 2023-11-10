@@ -12,7 +12,9 @@ import com.foodhub.entities.Vendor;
 import com.foodhub.enums.AddressType;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
-	
+
+	void deleteAllByVendorId(Long id);
+
 	Optional<List<Address>> findAllByCustomerId(Long customerId);
 	
 	Optional<List<Address>> findAllByAddressType(AddressType addressType);

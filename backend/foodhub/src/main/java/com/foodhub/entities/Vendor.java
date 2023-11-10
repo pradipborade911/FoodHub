@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.repository.cdi.Eager;
 
 
 @Entity
@@ -27,11 +28,11 @@ public class Vendor extends BaseEntity {
 	@Value("false")
 	private boolean isBlocked;
 	
-	String firstName;
-	String lastName;
-	String email;
-	String mobile;
-	LocalDate registerDate;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String mobile;
+	private LocalDate registerDate;
 	@OneToOne(cascade = CascadeType.ALL)@JoinColumn(name="user_id")
 	private User user;
 

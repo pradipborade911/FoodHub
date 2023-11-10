@@ -2,23 +2,24 @@ package com.foodhub.service;
 
 import java.util.List;
 
-import com.foodhub.dto.UserProfile;
+import com.foodhub.dto.CustomerDTO;
+import com.foodhub.dto.VendorDTO;
 import jakarta.transaction.Transactional;
 
 @Transactional
 public interface VendorService {
 
-	public List<UserProfile> getAllVendorsList();
+	public List<VendorDTO> getAllVendorsList();
 
-	public UserProfile getVendorById(Long vendorId);
+	public VendorDTO getVendorById(Long vendorId);
 
-	public UserProfile updateVendor(UserProfile detachedVendor);
+	public VendorDTO updateVendor(VendorDTO detachedVendor);
 
 	public String deleteVendorById(Long vendorId);
 
 	public String approveVendorById(Long vendorId);
 
-	public List<UserProfile> getAllUnapprovedVendors();
+	public List<VendorDTO> getAllUnapprovedVendors();
 
 	/*
 	 * public UserProfile getUnapprovedVendorById(Long vendorId);
@@ -27,12 +28,12 @@ public interface VendorService {
 
 	public String changeBlockingStatus(Long id);
 
-	public List<UserProfile> getCustomersByVendorId(Long vendorId);
+	public List<CustomerDTO> getCustomersByVendorId(Long vendorId);
 
-	public List<UserProfile> getAllApprovedVendors();
+	public List<VendorDTO> getAllApprovedVendors();
 	
-	public List<UserProfile> findAllVendorsByPincode(Integer pin);
+	public List<VendorDTO> findAllVendorsByPincode(Integer pin);
 
-	UserProfile getVendorByEmail(String email);
+	VendorDTO getVendorByEmail(String email);
 
 }

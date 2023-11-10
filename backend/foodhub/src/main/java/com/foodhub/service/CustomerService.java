@@ -1,21 +1,21 @@
 package com.foodhub.service;
 
 import com.foodhub.dto.SignUpRequest;
-import com.foodhub.dto.UserProfile;
+import com.foodhub.dto.CustomerDTO;
 
 import java.util.List;
 
 public interface CustomerService {
 
-	public List<UserProfile> getAllCustomers();
+	public List<CustomerDTO> getAllCustomers();
 
-	public UserProfile getCustomerById(Long customerId);
+	public CustomerDTO getCustomerById(Long customerId);
 
-	public UserProfile updateCustomerDetails(Long id, SignUpRequest customer);
+	public CustomerDTO updateCustomerDetails(CustomerDTO customer);
 
 	public String deleteCustomerById(Long customerId);
 
 	public String changeBlockingStatus(Long customerId);
 	
-	public UserProfile getCustomerByEmail(String Email);
+	public CustomerDTO getCustomerByEmail(String Email);
 }

@@ -5,6 +5,7 @@ import com.foodhub.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -33,4 +34,6 @@ public class SignUpRequest {
     private String userRole;
 
     private Address address;
+
+    private MultipartFile profilePic;
 }

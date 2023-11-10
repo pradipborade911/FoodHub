@@ -11,6 +11,7 @@ import com.foodhub.enums.UserRole;
 import com.foodhub.execptions.ResourceNotFoundException;
 import com.foodhub.repository.AddressRepository;
 import com.foodhub.repository.CustomerRepository;
+import com.foodhub.repository.ImageService;
 import com.foodhub.repository.VendorRepository;
 import com.foodhub.security.JwtUtils;
 import com.foodhub.security.User;
@@ -40,12 +41,17 @@ public class LoginServiceImpl implements LoginService{
 
     @Autowired
     AddressRepository addressRepository;
+
+    @Autowired
+    ImageService imageService;
+
     @Autowired
     BCryptPasswordEncoder encoder;
 
     @Override
     public String signup(SignUpRequest signUpRequest) {
         User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), UserRole.valueOf(signUpRequest.getUserRole()));
+        String profilePicLocation = imageService.save(signUpRequest.getProfilePic(), signUpRequest.getFirstName() + signUpRequest.getLastName());
         userRepo.save(user);
         Address address = signUpRequest.getAddress();
 
@@ -60,7 +66,8 @@ public class LoginServiceImpl implements LoginService{
                         signUpRequest.getMobile(),
                         LocalDate.now(),
                         user,
-                        false);
+                        false,
+                        profilePicLocation);
                 customerRepository.save(customer);
                 address.setCustomer(customer);
                 break;
@@ -98,13 +105,15 @@ public class LoginServiceImpl implements LoginService{
                 signInResponse = modelMapper.map(vendor, SignInResponse.class);
                 signInResponse.setUserRole(UserRole.VENDOR);
                 Address vendorAddress = addressRepository.findByVendorIdAndAddressType(vendor.getId(), AddressType.HOME).orElseThrow(() -> new ResourceNotFoundException("Error while fetching address"));
+                //signInResponse.setProfilePic(imageService.getImageFile(vendor.getProfilePicPath()));
                 signInResponse.setAddress(vendorAddress.toString());
                 break;
             case "CUSTOMER":
                 Customer customer = customerRepository.findByUser(user).orElseThrow(() -> new UsernameNotFoundException("Customer not found "));
                 signInResponse = modelMapper.map(customer, SignInResponse.class);
                 signInResponse.setUserRole(UserRole.CUSTOMER);
-                Address customerAddress = addressRepository.findByVendorIdAndAddressType(customer.getId(), AddressType.HOME).orElseThrow(() -> new ResourceNotFoundException("Error while fetching address"));
+                Address customerAddress = addressRepository.findByCustomerIdAndAddressType(customer.getId(), AddressType.HOME).orElseThrow(() -> new ResourceNotFoundException("Error while fetching address"));
+                signInResponse.setProfilePic(imageService.getImageFile(customer.getProfilePicPath()));
                 signInResponse.setAddress(customerAddress.toString());
                 break;
         }
