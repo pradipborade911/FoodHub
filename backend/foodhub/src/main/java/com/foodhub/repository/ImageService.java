@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 @Component
 public class ImageService {
@@ -22,7 +23,7 @@ public class ImageService {
     public String save(MultipartFile image, String imageName) {
         try{
             String profilePicLocation = environment.getProperty("profile_pic_location");
-            Path newImage = Paths.get(profilePicLocation + "-" + imageName);
+            Path newImage = Paths.get(profilePicLocation + "-" + imageName + LocalDate.now());
             Files.createDirectories(newImage.getParent());
             Files.write(newImage, image.getBytes());
             return newImage.toAbsolutePath().toString();
