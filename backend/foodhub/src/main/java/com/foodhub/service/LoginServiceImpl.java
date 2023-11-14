@@ -90,7 +90,7 @@ public class LoginServiceImpl implements LoginService{
     }
 
     @Override
-    public SignInResponse signin(SignInRequest signInRequest) {
+    public Object[] signin(SignInRequest signInRequest) {
         SignInResponse signInResponse = null;
         UsernamePasswordAuthenticationToken unverifiedAuthToken = new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword());
         authenticationManager.authenticate(unverifiedAuthToken);
@@ -118,8 +118,7 @@ public class LoginServiceImpl implements LoginService{
                 break;
         }
         String jwtToken = JwtUtils.generateJwtToken(user);
-        signInResponse.setJwt(jwtToken);
-        return signInResponse;
+        return new Object[] {signInResponse, jwtToken};
         
     }
 }

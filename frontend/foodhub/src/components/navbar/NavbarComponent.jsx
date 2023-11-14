@@ -71,7 +71,11 @@ class NavbarComponent extends Component {
                             </a>
                         </li>
                         <li className="nav-item">
-                                <a className="nav-link darker-link" href="http://localhost:3000/sign-in" onClick={this.toggleMenu}>
+                            <a className="nav-link" href="http://localhost:3000/admin" onClick={this.toggleMenu}>
+                                ADMIN
+                            </a>
+                        </li>                        <li className="nav-item">
+                                <a className="nav-link darker-link" href="http://localhost:3000/login" onClick={this.toggleMenu}>
                                     Sign In
                                 </a>
                             </li>

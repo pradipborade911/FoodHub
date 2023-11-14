@@ -32,8 +32,8 @@ public class SecurityConfiguration {
 //                                    .requestMatchers(HttpMethod.POST, "/signup")
 //                                    .permitAll()
 //                                    .anyRequest().authenticated()
-                                    .requestMatchers("/**")
-                                    .permitAll()
+                                    .requestMatchers(HttpMethod.GET,"/customer/**").hasAuthority("CUSTOMER")
+                                    .requestMatchers("/login").permitAll()
                                     .anyRequest().authenticated();
                         }
                 )

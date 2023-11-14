@@ -5,6 +5,7 @@ import Login from './components/pages/Login.js';
 import Profile from './components/pages/Profile.js';
 import Navbar from './components/navbar/NavbarComponent.jsx'
 import SignUp from './components/pages/Register';
+import Lists from './components/pages/Lists';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/admin" element={<Lists />} />
         </Routes>
       </div>
     </Router>

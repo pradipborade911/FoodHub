@@ -1,7 +1,6 @@
 package com.foodhub.controller;
 
 import com.foodhub.dto.CustomerDTO;
-import com.foodhub.dto.SignUpRequest;
 import com.foodhub.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/customer")
+@CrossOrigin("http://localhost:3000/")
 @RestController
 public class CustomerController {
     @Autowired

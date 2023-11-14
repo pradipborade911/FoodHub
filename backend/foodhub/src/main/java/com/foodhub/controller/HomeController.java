@@ -4,6 +4,8 @@ import com.foodhub.dto.SignInRequest;
 import com.foodhub.dto.SignInResponse;
 import com.foodhub.dto.SignUpRequest;
 import com.foodhub.service.LoginService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,10 +24,15 @@ public class HomeController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest){
+    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest,  HttpServletResponse response){
         System.out.println(signInRequest.getUsername() + " " + signInRequest.getPassword());
-        SignInResponse response =  loginService.signin(signInRequest);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        SignInResponse signInResponse =  (SignInResponse)loginService.signin(signInRequest)[0];
+        String jwtToken = (String)loginService.signin(signInRequest)[1];
+        Cookie jwtCookie = new Cookie("token", jwtToken);
+        jwtCookie.setMaxAge(600);
+        jwtCookie.setHttpOnly(true);
+        response.setHeader("Set-Cookie", String.format("%s=%s; HttpOnly; SameSite=None", jwtCookie.getName(), jwtCookie.getValue()));
+        return new ResponseEntity<>(signInResponse, HttpStatus.OK);
     }
 
     @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.foodhub.dto.ApiResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -36,4 +37,9 @@ public class GlobalExceptionHandler {
 		return new ApiResponse(e.getMessage());
 	}
 
+	@ExceptionHandler(ExpiredJwtException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException ex) {
+		return new ResponseEntity<>("JWT token has expired", HttpStatus.UNAUTHORIZED);
+	}
 }
